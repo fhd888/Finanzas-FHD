@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+<meta name="theme-color" content="#0a0f1d" />
+<title>FHD Finanzas Pro</title>
+<style>
+:root {
+  --bg: #0a0f1d;
+  --card-bg: rgba(22, 33, 54, 0.94);
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-glow: rgba(37, 99, 235, 0.4);
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --green: #10b981;
+  --red: #ef4444;
+  --border: #334155;
+}
+
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg);
+  background-image: 
+    linear-gradient(135deg, rgba(10, 15, 29, 0.95) 0%, rgba(15, 23, 42, 0.93) 100%),
+    url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1920&q=80");
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  color: var(--text);
+  padding-top: calc(14px + env(safe-area-inset-top));
+  padding-bottom: calc(26px + env(safe-area-inset-bottom));
+  padding-left: calc(14px + env(safe-area-inset-left));
+  padding-right: calc(14px + env(safe-area-inset-right));
+  max-width: 980px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+h1 { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.5px; }
+.subtitle { font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.8px; }
+
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+select, input {
+  padding: 10px 12px;
+  background: rgba(11, 17, 32, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.9rem;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input:focus, select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); }
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.card {
+  background-color: var(--card-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+.balance-display { font-size: 1.7rem; font-weight: 800; margin: 4px 0; }
+
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px 12px 2px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid rgba(51, 65, 85, 0.5);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.nav-tabs::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  background: rgba(15, 23, 42, 0.85);
+  color: #cbd5e1;
+  border: 1.5px solid #334155;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
+  border-color: #60a5fa;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.2s ease-in-out; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-grid { display: flex; flex-direction: column; gap: 10px; }
+.form-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.form-row > * { flex: 1 1 140px; }
+
+button.action-btn {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  font-size: 0.9rem;
+}
+button.action-btn:active { opacity: 0.85; }
+
+.chip-group { display: flex; gap: 6px; margin: 8px 0; overflow-x: auto; }
+.chip {
+  background: rgba(11, 17, 32, 0.6);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.item-list { list-style: none; max-height: 320px; overflow-y: auto; margin-top: 8px; }
+.item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.86rem; }
+.income { color: var(--green); font-weight: 700; }
+.expense { color: var(--red); font-weight: 700; }
+.asset-val { color: #38bdf8; font-weight: 700; }
+.btn-icon { background: none; border: none; color: var(--text-muted); padding: 4px 6px; font-size: 0.95rem; cursor: pointer; }
+.btn-icon:hover { color: #fff; }
+
+.progress-bg { background: rgba(11, 17, 32, 0.8); border-radius: 999px; height: 8px; width: 100%; overflow: hidden; margin-top: 6px; }
+.progress-fill { background: var(--accent); height: 100%; width: 0%; transition: width 0.3s; }
+
+.chart-wrapper { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+.chart-donut { position: relative; width: 125px; height: 125px; margin: 0 auto; flex-shrink: 0; }
+.chart-legend { flex: 1; min-width: 180px; list-style: none; max-height: 250px; overflow-y: auto; }
+.chart-legend-item { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; font-size: 0.78rem; border-bottom: 1px solid rgba(51, 65, 85, 0.3); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+
+.sim-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.78rem; }
+.sim-table th, .sim-table td { padding: 6px; text-align: left; border-bottom: 1px solid var(--border); }
+.sim-table th { color: var(--text-muted); }
+
+/* Modal de Modificación Directa */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 14px;
+  padding: 20px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 8px;
+}
+.modal-header h3 { font-size: 1.1rem; font-weight: 700; color: #fff; }
+
+footer {
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.btn-sm {
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid var(--border);
+  color: #cbd5e1;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div id="appContainer">
+  <header>
+    <div>
+      <h1 id="appTitle">FHD Finanzas</h1>
+      <p class="subtitle" id="appSubtitle">Salud Financiera & Portafolio</p>
+    </div>
+    <div class="controls-row">
+      <select id="currencySelect" onchange="changeCurrency(this.value)">
+        <option value="$">USD ($)</option>
+        <option value="€">EUR (€)</option>
+        <option value="MX$">MXN ($)</option>
+        <option value="COP$">COP ($)</option>
+        <option value="ARS$">ARS ($)</option>
+        <option value="S/">PEN (S/)</option>
+        <option value="CLP$">CLP ($)</option>
+      </select>
+      <select id="langSelect" onchange="changeLanguage(this.value)">
+        <option value="es">Español</option>
+        <option value="en">English</option>
+      </select>
+      <input type="month" id="monthFilter" onchange="saveAndRender()" />
+    </div>
+  </header>
+
+  <!-- DASHBOARD DE METRICAS PRINCIPALES -->
+  <div class="grid-3">
+    <div class="card">
+      <span class="label" id="lblNetBalance">Balance Neto Mes</span>
+      <div class="balance-display" id="netBalance">$0.00</div>
+      <p class="label" id="summaryStats">Ing: $0.00 | Gas: $0.00</p>
+      <p class="label" id="carryoverStats" style="color: #38bdf8; margin-top: 3px;">Remanente: $0.00</p>
+    </div>
+    <div class="card">
+      <span class="label" id="lblSavingsRate">Tasa de Ahorro / Inversión</span>
+      <div class="balance-display" style="color: var(--green);" id="savingsRateDisplay">0%</div>
+      <p class="label" id="savingsAdvice">Monitoreo activo</p>
+    </div>
+    <div class="card">
+      <span class="label" id="lblTotalAssets">Patrimonio Total (Activos)</span>
+      <div class="balance-display" style="color: #38bdf8;" id="totalAssetsDisplay">$0.00</div>
+      <p class="label" id="assetsCountLabel">0 activos registrados</p>
+    </div>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('tab-tx')" id="tabBtnTx">💸 Movimientos</button>
+    <button class="tab-btn" onclick="switchTab('tab-goals')" id="tabBtnGoals">🎯 Metas</button>
+    <button class="tab-btn" onclick="switchTab('tab-assets')" id="tabBtnAssets">💎 Activos</button>
+    <button class="tab-btn" onclick="switchTab('tab-accounts')" id="tabBtnAccounts">🏦 Cuentas</button>
+    <button class="tab-btn" onclick="switchTab('tab-sim')" id="tabBtnSim">📈 Simulador</button>
+  </nav>
+
+  <!-- PESTAÑA 1: TRANSACCIONES -->
+  <section id="tab-tx" class="tab-content active">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px;">
+      <div class="card">
+        <h2 id="titleTx" style="font-size: 1.05rem; margin-bottom: 12px;">Registrar Movimiento</h2>
+        <form id="txForm" class="form-grid">
+          <div class="form-row">
+            <select id="txType" onchange="updateCategoryDropdown()" style="font-weight: 700;">
+              <option value="income" style="color: var(--green);">➕ Ingreso (+)</option>
+              <option value="expense" style="color: var(--red);">➖ Gasto (-)</option>
+            </select>
+            <select id="txCategory" required></select>
+          </div>
+          <div class="form-row">
+            <input type="text" id="txDesc" placeholder="Concepto (ej. Renta, Gasolina, Nómina)" required />
+            <input type="number" id="txAmount" placeholder="Monto" step="0.01" inputmode="decimal" required />
+          </div>
+          <div class="form-row">
+            <input type="date" id="txDate" required />
+          </div>
+          <button type="submit" class="action-btn" id="btnTxSubmit">Añadir Movimiento</button>
+        </form>
+
+        <div style="margin-top: 16px;">
+          <input type="text" id="txSearchInput" placeholder="🔍 Buscar movimiento o categoría..." oninput="saveAndRender()" style="width: 100%; margin-bottom: 8px;" />
+          <div class="chip-group">
+            <button type="button" class="chip active" onclick="setListFilter('all')" id="btnFilterAll">Todos</button>
+            <button type="button" class="chip" onclick="setListFilter('income')" id="btnFilterInc">Ingresos</button>
+            <button type="button" class="chip" onclick="setListFilter('expense')" id="btnFilterExp">Gastos</button>
+          </div>
+          <ul class="item-list" id="txList"></ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 id="titleChart" style="font-size: 1.05rem; margin-bottom: 12px;">Distribución de Gastos</h2>
+        <div class="chart-wrapper">
+          <div class="chart-donut">
+            <svg viewBox="0 0 36 36" style="width: 100%; height: 100%; transform: rotate(-90deg);" id="donutSvg">
+              <circle cx="18" cy="18" r="15.9155" fill="transparent" stroke="#1e293b" stroke-width="4"></circle>
+            </svg>
+            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <span class="label" style="font-size: 0.6rem;" id="lblTotalExpenseChart">Total</span>
+              <strong style="font-size: 0.82rem;" id="donutTotalAmount">$0.00</strong>
+            </div>
+          </div>
+          <ul class="chart-legend" id="chartLegend"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PESTAÑA 2: METAS -->
+  <section id="tab-goals" class="tab-content">
+    <div class="card">
+      <h2 id="titleGoals" style="font-size: 1.05rem; margin-bottom: 12px;">Metas de Ahorro & Portafolio</h2>
+      <form id="goalForm" class="form-grid">
+        <div class="form-row">
+          <input type="text" id="goalName" placeholder="Meta (ej. Fondo Emergencia, Enganche)" required />
+          <input type="number" id="goalTarget" placeholder="Monto Objetivo" step="0.01" inputmode="decimal" required />
+        </div>
+        <div class="form-row">
+          <input type="number" id="goalCurrent" placeholder="Aporte Inicial" step="0.01" inputmode="decimal" />
+          <select id="goalDeductType">
+            <option value="Inversión / Fondo">Deducir como Inversión / Fondo</option>
+            <option value="Gastos Personales">Deducir como Gastos Personales</option>
+            <option value="Taxes (Impuestos)">Deducir como Taxes (Impuestos)</option>
+            <option value="Otros Gastos">Deducir como Gasto General</option>
+          </select>
+        </div>
+        <button type="submit" class="action-btn" id="btnGoalSubmit">Crear Meta</button>
+      </form>
+      <div style="margin-top: 16px;">
+        <span class="label" id="titleGoalsProgress">Progreso de Objetivos</span>
+        <div id="goalsList" style="margin-top: 8px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PESTAÑA 3: ACTIVOS -->
+  <section id="tab-assets" class="tab-content">
+    <div class="card">
+      <h2 id="titleAssets" style="font-size: 1.05rem; margin-bottom: 12px;">Portafolio de Activos (Assets)</h2>
+      <form id="assetForm" class="form-grid">
+        <div class="form-row">
+          <input type="text" id="assetName" placeholder="Nombre (ej. Inmueble, Nissan Pathfinder 2022)" required />
+          <input type="number" id="assetValue" placeholder="Valor Estimado" step="0.01" inputmode="decimal" required />
+        </div>
+        <div class="form-row">
+          <select id="assetCategory"></select>
+          <select id="assetDeduct">
+            <option value="no">No deducir del saldo</option>
+            <option value="yes">Deducir del saldo (Inversión)</option>
+          </select>
+        </div>
+        <button type="submit" class="action-btn" id="btnAssetSubmit">Registrar Activo</button>
+      </form>
+      <div style="margin-top: 16px;">
+        <span class="label" id="titleAssetsList">Mis Activos Registrados</span>
+        <ul class="item-list" id="assetsList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PESTAÑA 4: CUENTAS -->
+  <section id="tab-accounts" class="tab-content">
+    <div class="card">
+      <h2 id="titleAccounts" style="font-size: 1.05rem; margin-bottom: 12px;">Vincular Cuentas e Inversiones</h2>
+      <form id="accountForm" class="form-grid">
+        <div class="form-row">
+          <input type="text" id="accName" placeholder="Institución (ej. Chase, Webull, Vanguard)" required />
+          <input type="number" id="accBalance" placeholder="Balance Actual" step="0.01" inputmode="decimal" required />
+        </div>
+        <div class="form-row">
+          <select id="accType">
+            <option value="bank">Cuenta Bancaria (Ahorro / Corriente)</option>
+            <option value="investment">Cuenta Inversión / Brokerage</option>
+          </select>
+          <select id="accSyncMode">
+            <option value="asset">Sumar automáticamente a Patrimonio</option>
+            <option value="balance">Añadir al balance disponible mensual</option>
+            <option value="monitor">Sólo Monitoreo</option>
+          </select>
+        </div>
+        <button type="submit" class="action-btn" id="btnAccSubmit">Vincular Cuenta</button>
+      </form>
+      <div style="margin-top: 16px;">
+        <span class="label" id="titleAccountsList">Cuentas Registradas</span>
+        <ul class="item-list" id="accountsList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PESTAÑA 5: SIMULADOR -->
+  <section id="tab-sim" class="tab-content">
+    <div class="card">
+      <h2 id="titleSimulator" style="font-size: 1.05rem; margin-bottom: 12px;">Simulador de Interés Compuesto</h2>
+      <div class="form-row" style="margin-bottom: 10px;">
+        <input type="number" id="simInitial" placeholder="Inicial" value="1000" inputmode="decimal" />
+        <input type="number" id="simMonthly" placeholder="Mensual" value="200" inputmode="decimal" />
+        <input type="number" id="simRate" placeholder="Rend. Anual (%)" value="8" inputmode="decimal" />
+        <input type="number" id="simYears" placeholder="Años" value="10" inputmode="numeric" />
+      </div>
+      <button type="button" class="action-btn" onclick="calculateCompoundInterest()" id="btnSimCalc">Calcular Proyección</button>
+      <div style="margin-top: 12px; font-size: 0.92rem;" id="simResult"></div>
+      <div style="margin-top: 14px; overflow-x: auto;">
+        <table class="sim-table" id="simTable">
+          <thead>
+            <tr>
+              <th>Año</th>
+              <th>Capital Aportado</th>
+              <th>Interés Acumulado</th>
+              <th>Balance Final</th>
+            </tr>
+          </thead>
+          <tbody id="simTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span id="footerText">FHD Finanzas 2026</span>
+    <div style="display: flex; gap: 6px;">
+      <button type="button" class="btn-sm" onclick="exportCSV()">📊 CSV</button>
+      <button type="button" class="btn-sm" onclick="exportData()">💾 Backup</button>
+      <label class="btn-sm" style="display: inline-flex; align-items: center;">
+        📥 Importar <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="importData(event)" />
+      </label>
+    </div>
+  </footer>
